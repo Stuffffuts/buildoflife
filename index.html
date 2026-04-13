@@ -24,7 +24,7 @@ g=_=>{c+=Math.max(1,a)*2.5**m*3**M;u()},
 // Buy Atom if enough cosmic, else alert
 ba=_=>c>=10?(c-=10,a++,u()):alert('Not enough cosmic!'),
 // Buy Molecule if enough atoms, else alert
-bm=_=>a>=25?(a-=25,m++,u()):alert('Need 25 atoms!'),
+bm=_=>a>25?(a-=25,m++,u()):alert('Need more than 25 atoms!'),
 // Buy Macromolecule if enough molecules, else alert
 bM=_=>m>=100?(m-=100,M++,u()):alert('Need 100 molecules!');
 // Initial render
