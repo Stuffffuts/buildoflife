@@ -1,7 +1,15 @@
 <!DOCTYPE html>
 <html>
   <body>
-    <h1>Hello </h1>
-    <p>My website works!</p>
+    <h1>Money Game</h1>
+    <p>Money: <span id=m>0</span></p>
+    <button id=b>Click</button>
+    <script>
+      // c tracks current money, m & b are DOM elements
+      let c=0,
+          m=document.getElementById('m'),
+          b=document.getElementById('b');
+      b.onclick=_=>m.innerText=++c;  // increment and update display
+    </script>
   </body>
 </html>
