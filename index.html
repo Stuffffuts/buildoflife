@@ -1,32 +1,97 @@
 <!DOCTYPE html>
-<html><body>
+<html>
+<body>
 <h1>Cosmic Game</h1>
-<p>Cosmic Process: <span id=c>0</span></p>
-<p>Atoms: <span id=a>1</span></p>
-<p>Molecules: <span id=m>0</span></p>
-<p>Macromolecules: <span id=M>0</span></p>
-<button onclick=g()>Generate</button>
-<button onclick=ba()>Buy Atom (+1, cost: 10 cosmic)</button>
-<button onclick=bm()>25 Atoms → 1 Molecule</button>
-<button onclick=bM()>100 Molecules → 1 Macromolecule</button>
+
+<p>Cosmic Process: <span id="c">0</span></p>
+<p>Atoms: <span id="a">0</span></p>
+<p>Molecules: <span id="m">0</span></p>
+<p>Macromolecules: <span id="M">0</span></p>
+
+<button onclick="g()">Generate</button>
+<button onclick="ba()">Buy Atom (+1, cost: 10 cosmic)</button>
+<button onclick="bm()">25 Atoms → 1 Molecule</button>
+<button onclick="bM()">100 Molecules → 1 Macromolecule</button>
+
 <script>
-// Counters: c=cosmic, a=atoms, m=molecules, M=macromolecules
-let c=0,a=1,m=0,M=0,
-// Update all displays in one call
-u=_=>{
-  document.getElementById('c').innerText=Math.floor(c);
-  document.getElementById('a').innerText=a;
-  document.getElementById('m').innerText=m;
-  document.getElementById('M').innerText=M;
-},
-// Generate cosmic: at least 1, buffed by m and M
-g=_=>{c+=Math.max(1,a)*2.5**m*3**M;u()},
-// Buy Atom if enough cosmic, else alert
-ba=_=>c>=10?(c-=10,a++,u()):alert('Not enough cosmic!'),
-// Buy Molecule if enough atoms, else alert
-bm=_=>a>25?(a-=25,m++,u()):alert('Need more than 25 atoms!'),
-// Buy Macromolecule if enough molecules, else alert
-bM=_=>m>=100?(m-=100,M++,u()):alert('Need 100 molecules!');
-// Initial render
+// Counters
+let c = 0, a = 0, m = 0, M = 0;
+
+// Load save
+function load() {
+  let save = JSON.parse(localStorage.getItem("cosmicSave"));
+  if (save) {
+    c = save.c || 0;
+    a = save.a || 0;
+    m = save.m || 0;
+    M = save.M || 0;
+  }
+}
+
+// Save game
+function save() {
+  localStorage.setItem("cosmicSave", JSON.stringify({
+    c: c,
+    a: a,
+    m: m,
+    M: M
+  }));
+}
+
+// Update display
+function u() {
+  document.getElementById('c').innerText = Math.floor(c);
+  document.getElementById('a').innerText = a;
+  document.getElementById('m').innerText = m;
+  document.getElementById('M').innerText = M;
+}
+
+// Generate cosmic
+function g() {
+  c += Math.max(1, a) * 2.5 ** m * 3 ** M;
+  u();
+}
+
+// Buy atom
+function ba() {
+  if (c >= 10) {
+    c -= 10;
+    a++;
+    u();
+  } else {
+    alert('Not enough cosmic!');
+  }
+}
+
+// Convert atoms → molecule
+function bm() {
+  if (a >= 25) {
+    a -= 25;
+    m++;
+    u();
+  } else {
+    alert('Need 25 atoms!');
+  }
+}
+
+// Convert molecules → macromolecule
+function bM() {
+  if (m >= 100) {
+    m -= 100;
+    M++;
+    u();
+  } else {
+    alert('Need 100 molecules!');
+  }
+}
+
+// Start game
+load();
 u();
-</script></body></html>
+
+// Auto-save every second
+setInterval(save, 1000);
+</script>
+
+</body>
+</html>
