@@ -1,79 +1,32 @@
 <!DOCTYPE html>
-<html>
-  <body>
-
-    <h1>Cosmic Game</h1>
-
-    <p>Cosmic Process: <span id="cosmic">0</span></p>
-    <p>Atoms: <span id="atoms">1</span></p>
-    <p>Molecules: <span id="molecules">0</span></p>
-    <p>Macromolecules: <span id="macro">0</span></p>
-
-    <button onclick="addCosmic()">Generate</button>
-    <br><br>
-
-    <button onclick="buyAtoms()">Buy Atoms (+1) (cost: 10 cosmic)</button><br><br>
-
-    <button onclick="buyMolecules()">25 Atoms → 1 Molecule</button><br><br>
-
-    <button onclick="buyMacro()">100 Molecules → 1 Macromolecule</button>
-
-    <script>
-      let cosmic = 0;
-      let atoms = 1;
-      let molecules = 0;
-      let macro = 0;
-
-      function updateDisplay() {
-        document.getElementById("cosmic").innerText = Math.floor(cosmic);
-        document.getElementById("atoms").innerText = atoms;
-        document.getElementById("molecules").innerText = molecules;
-        document.getElementById("macro").innerText = macro;
-      }
-
-      function addCosmic() {
-        let gain = atoms;
-
-        // buffs
-        gain *= (1 + molecules * 1.5); // each molecule = 2.5x total effect (1 + 1.5)
-        gain *= (1 + macro * 2);       // macro boosts cosmic more
-
-        cosmic += gain;
-        updateDisplay();
-      }
-
-      function buyAtoms() {
-        if (cosmic >= 10) {
-          cosmic -= 10;
-          atoms += 1;
-          updateDisplay();
-        } else {
-          alert("Not enough cosmic process!");
-        }
-      }
-
-      function buyMolecules() {
-        if (atoms >= 25) {
-          atoms -= 25;
-          molecules += 1;
-          updateDisplay();
-        } else {
-          alert("Need 25 atoms!");
-        }
-      }
-
-      function buyMacro() {
-        if (molecules >= 100) {
-          molecules -= 100;
-          macro += 1;
-          updateDisplay();
-        } else {
-          alert("Need 100 molecules!");
-        }
-      }
-
-      updateDisplay();
-    </script>
-
-  </body>
-</html>
+<html><body>
+<h1>Cosmic Game</h1>
+<p>Cosmic Process: <span id=c>0</span></p>
+<p>Atoms: <span id=a>1</span></p>
+<p>Molecules: <span id=m>0</span></p>
+<p>Macromolecules: <span id=M>0</span></p>
+<button onclick=g()>Generate</button>
+<button onclick=ba()>Buy Atom (+1, cost: 10 cosmic)</button>
+<button onclick=bm()>25 Atoms → 1 Molecule</button>
+<button onclick=bM()>100 Molecules → 1 Macromolecule</button>
+<script>
+// Counters: c=cosmic, a=atoms, m=molecules, M=macromolecules
+let c=0,a=1,m=0,M=0,
+// Update all displays in one call
+u=_=>{
+  document.getElementById('c').innerText=Math.floor(c);
+  document.getElementById('a').innerText=a;
+  document.getElementById('m').innerText=m;
+  document.getElementById('M').innerText=M;
+},
+// Generate cosmic: at least 1, buffed by m and M
+g=_=>{c+=Math.max(1,a)*2.5**m*3**M;u()},
+// Buy Atom if enough cosmic, else alert
+ba=_=>c>=10?(c-=10,a++,u()):alert('Not enough cosmic!'),
+// Buy Molecule if enough atoms, else alert
+bm=_=>a>=25?(a-=25,m++,u()):alert('Need 25 atoms!'),
+// Buy Macromolecule if enough molecules, else alert
+bM=_=>m>=100?(m-=100,M++,u()):alert('Need 100 molecules!');
+// Initial render
+u();
+</script></body></html>
