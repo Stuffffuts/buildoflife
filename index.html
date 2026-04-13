@@ -14,10 +14,10 @@
 <button onclick="bM()">100 Molecules → 1 Macromolecule</button>
 
 <script>
-// Counters
+// ================= DATA =================
 let c = 0, a = 0, m = 0, M = 0;
 
-// Load save
+// ================= SAVE =================
 function load() {
   let save = JSON.parse(localStorage.getItem("cosmicSave"));
   if (save) {
@@ -28,17 +28,11 @@ function load() {
   }
 }
 
-// Save game
 function save() {
-  localStorage.setItem("cosmicSave", JSON.stringify({
-    c: c,
-    a: a,
-    m: m,
-    M: M
-  }));
+  localStorage.setItem("cosmicSave", JSON.stringify({c,a,m,M}));
 }
 
-// Update display
+// ================= UI =================
 function u() {
   document.getElementById('c').innerText = Math.floor(c);
   document.getElementById('a').innerText = a;
@@ -46,50 +40,54 @@ function u() {
   document.getElementById('M').innerText = M;
 }
 
-// Generate cosmic
+// ================= CORE LOGIC =================
 function g() {
-  c += Math.max(1, a) * 2.5 ** m * 3 ** M;
+  // Macromolecules buff molecules
+  let effectiveMolecules = m * (2 ** M);
+
+  // Molecules buff atoms
+  let effectiveAtoms = a * (2 ** effectiveMolecules);
+
+  // Final cosmic gain
+  c += Math.max(1, effectiveAtoms) * (2 ** a) * (3 ** M);
+
   u();
 }
 
-// Buy atom
+// ================= BUY =================
 function ba() {
   if (c >= 10) {
     c -= 10;
     a++;
     u();
   } else {
-    alert('Not enough cosmic!');
+    alert("Not enough cosmic!");
   }
 }
 
-// Convert atoms → molecule
 function bm() {
   if (a >= 25) {
     a -= 25;
     m++;
     u();
   } else {
-    alert('Need 25 atoms!');
+    alert("Need 25 atoms!");
   }
 }
 
-// Convert molecules → macromolecule
 function bM() {
   if (m >= 100) {
     m -= 100;
     M++;
     u();
   } else {
-    alert('Need 100 molecules!');
+    alert("Need 100 molecules!");
   }
 }
 
-// Start game
+// ================= START =================
 load();
 u();
-
-// Auto-save every second
 setInterval(save, 1000);
 </script>
 
