@@ -1,15 +1,21 @@
 <!DOCTYPE html>
 <html>
   <body>
-    <h1>Money Game</h1>
-    <p>Money: <span id=m>0</span></p>
-    <button id=b>Click</button>
+
+    <h1>buttons</h1>
+
+    <p>Money: <span id="money">0</span></p>
+
+    <button onclick="addMoney()">Click me!</button>
+
     <script>
-      // c tracks current money, m & b are DOM elements
-      let c=0,
-          m=document.getElementById('m'),
-          b=document.getElementById('b');
-      b.onclick=_=>m.innerText=++c;  // increment and update display
+      let money = 0;
+
+      function addMoney() {
+        money = money + 1;
+        document.getElementById("money").innerText = money;
+      }
     </script>
+
   </body>
 </html>
