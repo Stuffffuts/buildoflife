@@ -9,56 +9,80 @@
 <p>Macromolecules: <span id="M">0</span></p>
 
 <button onclick="g()">Generate</button>
-<button onclick="ba()">Buy Atom (+1, cost: 10 cosmic)</button>
-<button onclick="bm()">25 Atoms → 1 Molecule</button>
-<button onclick="bM()">100 Molecules → 1 Macromolecule</button>
+<button onclick="ba()" id="atomBtn">Buy Atom (+1, cost: 10 cosmic)</button>
+<button onclick="bm()" id="molBtn">Buy Molecule (+1, cost: 25 atoms)</button>
+<button onclick="bM()" id="macBtn">Buy Macromolecule (+1, cost: 100 molecules)</button>
+<button onclick="resetGame()">Reset Progress</button>
 
 <script>
 // ================= DATA =================
-let c = 0, a = 0, m = 0, M = 0;
+let c = 0;
+let a = 0;
+let m = 0;
+let M = 0;
 
-// ================= SAVE =================
-function load() {
-  let save = JSON.parse(localStorage.getItem("cosmicSave"));
-  if (save) {
-    c = save.c || 0;
-    a = save.a || 0;
-    m = save.m || 0;
-    M = save.M || 0;
-  }
-}
-
+// ================= SAVE / LOAD =================
 function save() {
   localStorage.setItem("cosmicSave", JSON.stringify({c,a,m,M}));
 }
 
-// ================= UI =================
-function u() {
-  document.getElementById('c').innerText = Math.floor(c);
-  document.getElementById('a').innerText = a;
-  document.getElementById('m').innerText = m;
-  document.getElementById('M').innerText = M;
+function load() {
+  let s = JSON.parse(localStorage.getItem("cosmicSave"));
+  if (s) {
+    c = s.c || 0;
+    a = s.a || 0;
+    m = s.m || 0;
+    M = s.M || 0;
+  }
 }
 
-// ================= CORE LOGIC =================
+// ================= HELPERS =================
+
+// Molecule buff:
+// 0 molecule = +1 atom
+// 1 molecule = +2 atoms
+// 2 molecule = +3 atoms
+// 3 molecule = +4 atoms
+function atomBuyAmount() {
+  return 1 + m;
+}
+
+// Macromolecule buff for molecule buying
+function moleculeBuyAmount() {
+  return 1 + M;
+}
+
+// Cosmic generation:
+// 1 atom = 2x cosmic
 function g() {
-  // Macromolecules buff molecules
-  let effectiveMolecules = m * (2 ** M);
-
-  // Molecules buff atoms
-  let effectiveAtoms = a * (2 ** effectiveMolecules);
-
-  // Final cosmic gain
-  c += Math.max(1, effectiveAtoms) * (2 ** a) * (3 ** M);
-
+  let gain = a * 2;
+  if (gain < 1) gain = 1;
+  c += gain;
   u();
+}
+
+// ================= UI =================
+function u() {
+  document.getElementById("c").innerText = Math.floor(c);
+  document.getElementById("a").innerText = a;
+  document.getElementById("m").innerText = m;
+  document.getElementById("M").innerText = M;
+
+  document.getElementById("atomBtn").innerText =
+    "Buy Atom (+" + atomBuyAmount() + ", cost: 10 cosmic)";
+
+  document.getElementById("molBtn").innerText =
+    "Buy Molecule (+" + moleculeBuyAmount() + ", cost: 25 atoms)";
+
+  document.getElementById("macBtn").innerText =
+    "Buy Macromolecule (+1, cost: 100 molecules)";
 }
 
 // ================= BUY =================
 function ba() {
   if (c >= 10) {
     c -= 10;
-    a++;
+    a += atomBuyAmount();
     u();
   } else {
     alert("Not enough cosmic!");
@@ -68,7 +92,7 @@ function ba() {
 function bm() {
   if (a >= 25) {
     a -= 25;
-    m++;
+    m += moleculeBuyAmount();
     u();
   } else {
     alert("Need 25 atoms!");
@@ -78,10 +102,22 @@ function bm() {
 function bM() {
   if (m >= 100) {
     m -= 100;
-    M++;
+    M += 1;
     u();
   } else {
     alert("Need 100 molecules!");
+  }
+}
+
+// ================= RESET =================
+function resetGame() {
+  if (confirm("Reset all progress?")) {
+    c = 0;
+    a = 0;
+    m = 0;
+    M = 0;
+    save();
+    u();
   }
 }
 
