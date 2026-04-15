@@ -4,7 +4,38 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Build Your Own World</title>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-<style>body{font-family:Arial;background:#fff;color:#111;text-align:center;margin:0;padding:20px}.card{max-width:520px;margin:20px auto;padding:20px;border:1px solid #ddd;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,.08)}input,button{padding:10px;margin:6px;border-radius:10px;border:1px solid #ccc}button{cursor:pointer;background:#111;color:#fff}.hidden{display:none}</style>
-</head><body>Updated full code in canvas with requested buffs + 0.15s cooldown on generate and buy buttons.</body></html>
+<style>
+body{font-family:Arial;text-align:center;padding:20px;background:#fff;color:#111}
+button,input{padding:10px;margin:5px;border-radius:10px;border:1px solid #ccc}
+button{background:#111;color:#fff;cursor:pointer}
+.card{max-width:520px;margin:auto;padding:20px;border:1px solid #ddd;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>Build Your Own World</h1>
+<p>Cosmic Process: <span id="c">0</span></p>
+<p>Atoms: <span id="a">0</span></p>
+<p>Molecules: <span id="m">0</span></p>
+<p>Macromolecules: <span id="M">0</span></p>
+<p>Cells: <span id="cell">0</span></p>
+<button onclick="g()">Generate</button><br>
+<button onclick="ba()">Buy Atom (10 Cosmic)</button>
+<button onclick="bm()">Buy Molecule (25 Atoms)</button>
+<button onclick="bM()">Buy Macro (100 Molecules)</button>
+<button onclick="bc()">Buy Cell (2500 Macros)</button>
+</div>
+<script>
+let c=0,a=0,m=0,M=0,cell=0,last=0;
+const cEl=document.getElementById('c'),aEl=document.getElementById('a'),mEl=document.getElementById('m'),MEl=document.getElementById('M'),cellEl=document.getElementById('cell');
+function ready(){let n=Date.now();if(n-last<150)return false;last=n;return true;}
+function render(){cEl.textContent=Math.floor(c);aEl.textContent=a;mEl.textContent=m;MEl.textContent=M;cellEl.textContent=cell;}
+function g(){if(!ready())return;let gain=Math.pow(2,a);gain*=Math.pow(2.5,m);gain*=Math.pow(2,M);gain*=Math.pow(3,cell);c+=gain;render();}
+function ba(){if(!ready())return;if(c>=10){c-=10;a++;render();}}
+function bm(){if(!ready())return;if(a>=25){a-=25;m++;render();}}
+function bM(){if(!ready())return;if(m>=100){m-=100;M++;render();}}
+function bc(){if(!ready())return;if(M>=2500){M-=2500;cell++;render();}}
+render();
+</script>
+</body>
+</html>
