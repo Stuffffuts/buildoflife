@@ -225,8 +225,6 @@ function cosmicPower(){
 
 /* GENERATE */
 function g(){
-  let baseAtoms = Math.max(1, a);
-  let gain = baseAtoms * atomPower() * cosmicPower();function g(){
   let gain = Math.max(1, a * atomPower()) * cosmicPower();
   c += gain;
   render();
@@ -237,7 +235,7 @@ function ba(t){
   let cost = 10*t;
   if(c>=cost){
     c-=cost;
-    a+=t;
+    a += t * atomPower();
     render();
   }
 }
