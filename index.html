@@ -206,26 +206,32 @@ async function login(){
   }
 }
 
-/* MULTIPLIERS */
-function atomPower(){
-  return Math.pow(2,m);
+/* CHAIN BUFFS */
+function atomBuff(){
+  return 2 * a;
 }
 
-function moleculePower(){
-  return Math.pow(2.5,M);
+function moleculeBuff(){
+  return 2 * m;
 }
 
-function macroPower(){
-  return Math.pow(3,cell);
+function macroBuff(){
+  return 2.5 * M;
 }
 
-function cosmicPower(){
-  return 1;
+function cellBuff(){
+  return 3 * cell;
 }
 
 /* GENERATE */
 function g(){
-  let gain = Math.max(1, a * atomPower()) * cosmicPower();
+  let gain =
+    1 +
+    atomBuff() +
+    moleculeBuff() +
+    macroBuff() +
+    cellBuff();
+
   c += gain;
   render();
 }
@@ -235,7 +241,7 @@ function ba(t){
   let cost = 10*t;
   if(c>=cost){
     c-=cost;
-    a += t * atomPower();
+    a += t;
     render();
   }
 }
@@ -244,7 +250,7 @@ function bm(t){
   let cost = 25*t;
   if(a>=cost){
     a-=cost;
-    m += t * moleculePower();
+    m += t;
     render();
   }
 }
@@ -253,7 +259,7 @@ function bM(t){
   let cost = 100*t;
   if(m>=cost){
     m-=cost;
-    M += t * macroPower();
+    M += t;
     render();
   }
 }
